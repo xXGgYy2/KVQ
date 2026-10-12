@@ -1,0 +1,53 @@
+name: Test
+num_epochs: 30
+l_num_epochs: 0
+warmup_epochs: 2.5
+ema: true
+save_model: true
+batch_size: 1
+num_workers: 0
+ddp: 0
+wandb:
+  flag: 0
+  project_name: KVQ
+data:
+  val-demo:
+    type: FusionDataset
+    args:
+      phase: test
+      anno_file: ./labels/single_video.txt
+      data_prefix: ./demo_videos
+      get_close_matches: 1
+      sample_types:
+        fragments:
+          vqa_input: Resize
+          fragments_h: 14
+          fragments_w: 14
+          fsize_h: 32
+          fsize_w: 32
+          aligned: 8
+          clip_len: 32
+          frame_interval: 2
+          t_frag: 8
+          num_clips: 1
+model:
+  type: KVQ
+  args:
+    backbone:
+      fragments:
+        checkpoint: true
+        act_mag_flag: true
+        cross_layer:
+        - 0
+        - 0
+        - 1
+        - 1
+    vqa_head:
+      in_channels: 768
+      hidden_channels: 64
+optimizer:
+  lr: 0.0005
+  backbone_lr_mult: 0.1
+  wd: 0.05
+load_path: ./pretrained_weight/swin_tiny_patch244_window877_kinetics400_1k.pth
+test_load_path: ./weights/KVQ.pth

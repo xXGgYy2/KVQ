@@ -1,0 +1,71 @@
+# Upload to KVQ/configs/kvq_integrated_earlystop.yaml on the server.
+# Second-stage fine-tuning: initialize from the integrated-data best checkpoint.
+name: KVQ_train_ABCDEmix_offical
+num_epochs: 60
+batch_size: 2
+optimizer:
+  wd: 0.05
+
+trainer:
+  train_anno: /mnt/data/local-disk3/xyy/dataset/blance-ABCDE/mix/train.txt
+  val_anno: /mnt/data/local-disk3/xyy/dataset/blance-ABCDE/mix/val.txt
+  test_anno: /mnt/data/local-disk3/xyy/dataset/blance-ABCDE/mix/test.txt
+  video_root: /
+  init_checkpoint: /mnt/data/local-disk2/xyy/KVQ/weights/KVQ.pth
+  output_dir: results/KVQ_train_ABCDEmix_offical
+  epochs: 60
+  batch_size: 2
+  num_workers: 2
+  lr: 5.0e-6
+  backbone_lr_mult: 0.02
+  warmup_epochs: 1.0
+  min_lr_ratio: 0.1
+  early_stop_patience: 8
+  early_stop_min_epochs: 10
+  early_stop_min_delta: 0.001
+  eval_every: 1
+  checkpoint_every: 5000
+  distributed_timeout_minutes: 180
+  amp: true
+  ema: true
+  eval_both: true
+  lpc: true
+  lpc_weight: 0.02
+  lpc_time_grid: 16
+  grad_clip: 1.0
+  seed: 42
+  static_graph: true
+
+model:
+  type: KVQ
+  args:
+    backbone:
+      fragments:
+        checkpoint: true
+        act_mag_flag: true
+        cross_layer: [0, 0, 1, 1]
+    vqa_head:
+      in_channels: 768
+      hidden_channels: 64
+
+data:
+  train:
+    type: FusionDataset
+    args:
+      phase: train
+      # The trainer replaces these paths for each of train/val/test.
+      anno_file: /mnt/data/local-disk3/xyy/dataset/blance-ABCDE/mix/train.txt
+      data_prefix: /
+      get_close_matches: false
+      sample_types:
+        fragments:
+          vqa_input: Resize
+          fragments_h: 14
+          fragments_w: 14
+          fsize_h: 32
+          fsize_w: 32
+          aligned: 8
+          clip_len: 32
+          frame_interval: 2
+          t_frag: 8
+          num_clips: 1

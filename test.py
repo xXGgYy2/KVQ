@@ -211,7 +211,7 @@ def main():
         bests[key] = -1,-1,-1,1000
         path = config["test_load_path"]
         print(path)
-        state_dict = torch.load(path, map_location=device)["state_dict"]
+        state_dict = torch.load(path, map_location=device, weights_only=False)["state_dict"]
         i_state_dict = OrderedDict()
         for state_dict_key in state_dict.keys():
             if "module" in state_dict_key:

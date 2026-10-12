@@ -1,0 +1,225 @@
+name: finevd-enhance-best-mutil-test
+num_epochs: 30
+l_num_epochs: 0
+warmup_epochs: 2.5
+ema: true
+save_model: true
+batch_size: 4
+num_workers: 8
+ddp: 0
+
+wandb:
+    flag: 0
+    project_name: KVQ
+
+data:
+    # test-livevqc:
+    #     type: FusionDataset
+    #     args:
+    #         phase: test
+    #         anno_file: /mnt/data/local-disk3/xyy/dataset/LIVE-Video-Quality-Challenge-VQC-Database/vqc_test.txt
+    #         data_prefix: /
+    #         get_close_matches: 1
+    #         sample_types:
+    #             fragments:
+    #                 vqa_input: Resize
+    #                 fragments_h: 14 #7
+    #                 fragments_w: 14 #7
+    #                 fsize_h: 32
+    #                 fsize_w: 32
+    #                 aligned: 8
+    #                 clip_len: 32 #32
+    #                 frame_interval: 2
+    #                 t_frag: 8 #8
+    #                 num_clips: 1
+    # test-kv1k:
+    #     type: FusionDataset
+    #     args:
+    #         phase: test
+    #         anno_file: /mnt/data/local-disk3/xyy/dataset/KoNViD-1k/KoNViD_1k_mos.txt
+    #         data_prefix: /
+    #         get_close_matches: 1
+    #         sample_types:
+    #             fragments:
+    #                 vqa_input: Resize
+    #                 fragments_h: 14 #7
+    #                 fragments_w: 14 #7
+    #                 fsize_h: 32
+    #                 fsize_w: 32
+    #                 aligned: 8
+    #                 clip_len: 32 #32
+    #                 frame_interval: 2
+    #                 t_frag: 8 #8
+    #                 num_clips: 1
+    # test-avt-vsr:
+    #     type: FusionDataset
+    #     args:
+    #         phase: test
+    #         anno_file: /mnt/data/local-disk3/xyy/dataset/blance-data-add-HDR/datasets/vsr/test.txt #/mnt/data/local-disk3/xyy/dataset/avt-vqdb-uhd-1-vsr/labels.txt
+    #         data_prefix: / #mnt/data/local-disk3/xyy/dataset/avt-vqdb-uhd-1-vsr/upscaled-mp4
+    #         get_close_matches: 1
+    #         sample_types:
+    #             fragments:
+    #                 vqa_input: Resize
+    #                 fragments_h: 14 #7
+    #                 fragments_w: 14 #7
+    #                 fsize_h: 32
+    #                 fsize_w: 32
+    #                 aligned: 8
+    #                 clip_len: 32 #32
+    #                 frame_interval: 2
+    #                 t_frag: 8 #8
+    #                 num_clips: 1
+    # test-finevd:
+    #     type: FusionDataset
+    #     args:
+    #         phase: test
+    #         anno_file: /mnt/data/local-disk2/xyy/datasets/FineVD/FineVD/test.txt
+    #         data_prefix: /mnt/data/local-disk2/xyy/datasets/FineVD/videos_all_videos
+    #         get_close_matches: 1
+    #         sample_types:
+    #             fragments:
+    #                 vqa_input: Resize
+    #                 fragments_h: 14 #7
+    #                 fragments_w: 14 #7
+    #                 fsize_h: 32
+    #                 fsize_w: 32
+    #                 aligned: 8
+    #                 clip_len: 32 #32
+    #                 frame_interval: 2
+    #                 t_frag: 8     #8
+    #                 num_clips: 1
+    # test-vdpve:
+    #     type: FusionDataset
+    #     args:
+    #         phase: test
+    #         anno_file: /mnt/data/local-disk3/xyy/dataset/blance-data-add-HDR/datasets/vdpve/test.txt #/mnt/data/local-disk2/xyy/datasets/VDPVE/train.txt
+    #         data_prefix: / #mnt/data/local-disk2/xyy/datasets/VDPVE/train
+    #         get_close_matches: 1
+    #         sample_types:
+    #             fragments:
+    #                 vqa_input: Resize
+    #                 fragments_h: 14 #7
+    #                 fragments_w: 14 #7
+    #                 fsize_h: 32
+    #                 fsize_w: 32
+    #                 aligned: 8
+    #                 clip_len: 32 #32
+    #                 frame_interval: 2
+    #                 t_frag: 8     #8
+    #                 num_clips: 1
+    # test-aigc-TEST:
+    #     type: FusionDataset
+    #     args:
+    #         phase: test
+    #         anno_file: /mnt/data/local-disk3/xyy/dataset/blance-data-add-HDR/datasets/aigc/test.txt
+    #         #/mnt/data/local-disk3/xyy/dataset/AIGC-test/video_list_vqscore.txt
+    #         data_prefix: / #mnt/data/local-disk3/xyy/dataset/AIGC-test/AIGC
+    #         get_close_matches: 1
+    #         sample_types:
+    #             fragments:
+    #                 vqa_input: Resize
+    #                 fragments_h: 14 #7
+    #                 fragments_w: 14 #7
+    #                 fsize_h: 32
+    #                 fsize_w: 32
+    #                 aligned: 8
+    #                 clip_len: 32 #32
+    #                 frame_interval: 2
+    #                 t_frag: 8     #8
+    #                 num_clips: 1
+    # test-SDR-only:
+    #     type: FusionDataset
+    #     args:
+    #         phase: test
+    #         anno_file: /mnt/data/local-disk3/xyy/dataset/LIVE_Paired_Comparison_HDRvsSDR_Database/JOD_separate_out.txt
+    #         data_prefix: /mnt/data/local-disk3/xyy/dataset/LIVE_Paired_Comparison_HDRvsSDR_Database/open-sourced_HDR10
+    #         get_close_matches: 1
+    #         sample_types:
+    #             fragments:
+    #                 vqa_input: Resize
+    #                 fragments_h: 14 #7
+    #                 fragments_w: 14 #7
+    #                 fsize_h: 32
+    #                 fsize_w: 32
+    #                 aligned: 8
+    #                 clip_len: 32 #32
+    #                 frame_interval: 2
+    #                 t_frag: 8     #8
+    #                 num_clips: 1
+    # test-TAOBAO:
+    #     type: FusionDataset
+    #     args:
+    #         phase: test
+    #         anno_file: /mnt/data/local-disk3/xyy/dataset/TaobaoLive/TaoLive_label.txt
+    #         data_prefix: /mnt/data/local-disk3/xyy/dataset/TaobaoLive/all_parts
+    #         get_close_matches: 1
+    #         sample_types:
+    #             fragments:
+    #                 vqa_input: Resize
+    #                 fragments_h: 14 #7
+    #                 fragments_w: 14 #7
+    #                 fsize_h: 32
+    #                 fsize_w: 32
+    #                 aligned: 8
+    #                 clip_len: 32 #32
+    #                 frame_interval: 2
+    #                 t_frag: 8     #8
+    #                 num_clips: 1
+    # test-VSR2:
+    #     type: FusionDataset
+    #     args:
+    #         phase: test
+    #         anno_file: /mnt/data/local-disk3/xyy/dataset/VSR/vsr_list.txt
+    #         data_prefix: /
+    #         get_close_matches: 1
+    #         sample_types:
+    #             fragments:
+    #                 vqa_input: Resize
+    #                 fragments_h: 14 #7
+    #                 fragments_w: 14 #7
+    #                 fsize_h: 32
+    #                 fsize_w: 32
+    #                 aligned: 8
+    #                 clip_len: 32 #32
+    #                 frame_interval: 2
+    #                 t_frag: 8     #8
+    #                 num_clips: 1
+    test-SDR-only:
+        type: FusionDataset
+        args:
+            phase: test
+            anno_file: /mnt/data/local-disk3/xyy/dataset/LIVE_Paired_Comparison_HDRvsSDR_Database/JOD_separate_out.txt
+            data_prefix: /mnt/data/local-disk3/xyy/dataset/LIVE_Paired_Comparison_HDRvsSDR_Database/open-sourced_HDR10
+            get_close_matches: 1
+            sample_types:
+                fragments:
+                    vqa_input: Resize
+                    fragments_h: 14 #7
+                    fragments_w: 14 #7
+                    fsize_h: 32
+                    fsize_w: 32
+                    aligned: 8
+                    clip_len: 32 #32
+                    frame_interval: 2
+                    t_frag: 8     #8
+                    num_clips: 1
+model:
+    type: KVQ
+    args:
+        backbone:
+            fragments:
+                checkpoint: True
+                act_mag_flag: True
+                cross_layer: [0, 0, 1, 1]
+        vqa_head:
+            in_channels: 768
+            hidden_channels: 64
+            
+optimizer:
+    lr: !!float 5e-4
+    backbone_lr_mult: !!float 0.1
+    wd: 0.05
+
+load_path: ./pretrained_weight/swin_tiny_patch244_window877_kinetics400_1k.pth
+test_load_path: /mnt/data/local-disk2/xyy/KVQ/results/KVQ_train_enhance_fine/last.pth
