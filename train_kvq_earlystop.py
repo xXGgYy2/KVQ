@@ -526,14 +526,15 @@ def parse_args():
     parser.add_argument("--weight-decay", type=float)
     parser.add_argument("--warmup-epochs", type=float, default=1.0)
     parser.add_argument("--min-lr-ratio", type=float, default=0.1)
-    parser.add_argument("--early-stop-patience", type=int, default=8,
+    parser.add_argument("--early-stop-patience", type=int, default=3,
                         help="Stop after this many validation checks without significant improvement; 0 disables")
     parser.add_argument("--early-stop-min-epochs", type=int, default=10)
     parser.add_argument("--early-stop-min-delta", type=float, default=0.001,
                         help="Required improvement in validation (SRCC+PLCC)/2")
     parser.add_argument("--distributed-timeout-minutes", type=int, default=180)
     parser.add_argument("--checkpoint-every", type=int, default=5000)
-    parser.add_argument("--eval-every", type=int, default=1)
+    parser.add_argument("--eval-every", type=int, default=5,
+                        help="Run full validation every N epochs and always at the final epoch")
     parser.add_argument("--resume", help="Resume a checkpoint made by this DDP script")
     parser.add_argument(
         "--init-checkpoint",
@@ -550,8 +551,8 @@ def parse_args():
     parser.add_argument(
         "--eval-both",
         action=BooleanOptionalAction,
-        default=True,
-        help="Evaluate both raw and EMA weights at each validation point",
+        default=False,
+        help="Evaluate both raw and EMA weights at every validation point; slower than EMA-only",
     )
     parser.add_argument("--check-only", action="store_true")
     parser.add_argument("--smoke-test", action="store_true",
@@ -1134,6 +1135,11 @@ def main():
         print(f"Early stopping: monitor=validation (SRCC+PLCC)/2, patience={args.early_stop_patience}, "
               f"min_delta={args.early_stop_min_delta}, min_epochs={args.early_stop_min_epochs}; "
               f"warmup+cosine LR floor ratio={args.min_lr_ratio}", flush=True)
+        evaluated_weights = "EMA and raw" if args.ema and args.eval_both else (
+            "EMA only" if args.ema else "raw only")
+        print(f"Validation schedule: every {args.eval_every} epochs plus the final epoch; "
+              f"weights={evaluated_weights}. Early-stop patience counts validation checks, "
+              "not training epochs.", flush=True)
         print(f"GPUs={world_size}, per_gpu_batch={args.batch_size}, global_batch={global_batch}, "
               f"epochs={epochs}, steps/epoch={steps_per_epoch}, total_steps={total_steps}, "
               f"warmup_steps={warmup_steps}, head_lr={args.lr:.2e}, "

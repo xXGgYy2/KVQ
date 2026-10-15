@@ -1,6 +1,6 @@
 # Upload to KVQ/configs/kvq_integrated_earlystop.yaml on the server.
 # Second-stage fine-tuning: initialize from the integrated-data best checkpoint.
-name: KVQ_train_ABCDEmix_offical
+name: KVQ_train_ABCDEmix_offical_run02
 num_epochs: 60
 batch_size: 2
 optimizer:
@@ -11,8 +11,8 @@ trainer:
   val_anno: /mnt/data/local-disk3/xyy/dataset/blance-ABCDE/mix/val.txt
   test_anno: /mnt/data/local-disk3/xyy/dataset/blance-ABCDE/mix/test.txt
   video_root: /
-  init_checkpoint: /mnt/data/local-disk2/xyy/KVQ/weights/KVQ.pth
-  output_dir: results/KVQ_train_ABCDEmix_offical
+  init_checkpoint: results/KVQ_train_ABCDEmix_offical/last.pth
+  output_dir: results/KVQ_train_ABCDEmix_offical_run02
   epochs: 60
   batch_size: 2
   num_workers: 2
@@ -20,15 +20,18 @@ trainer:
   backbone_lr_mult: 0.02
   warmup_epochs: 1.0
   min_lr_ratio: 0.1
-  early_stop_patience: 8
+  # With eval_every=5, patience=3 means roughly 15 epochs without a
+  # significant validation improvement before stopping.
+  early_stop_patience: 3
   early_stop_min_epochs: 10
   early_stop_min_delta: 0.001
-  eval_every: 1
+  eval_every: 5
   checkpoint_every: 5000
   distributed_timeout_minutes: 180
   amp: true
   ema: true
-  eval_both: true
+  # EMA is used for routine model selection. Enabling this doubles validation.
+  eval_both: false
   lpc: true
   lpc_weight: 0.02
   lpc_time_grid: 16
